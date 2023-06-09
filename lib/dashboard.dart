@@ -1,3 +1,4 @@
+import 'package:car_dashbord/components/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
@@ -5,6 +6,7 @@ import 'dart:ui' as ui;
 import 'components/car_indicators.dart';
 import 'components/current_speed.dart';
 import 'components/gear_battery.dart';
+import 'components/menu.dart';
 import 'components/time_and_temp.dart';
 
 class Dashboard extends StatefulWidget {
@@ -15,7 +17,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<double> speedLineOpacities = [1, 0.8, 0.6, 0.4, 0.3, 0.2, 0.15, 0.1];
+  List<double> speedLineOpacities = [1, 0.8, 0.6];
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -23,95 +25,77 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: Colors.black,
       body: SizedBox(
         width: double.infinity,
-        child: (size.width > 1184 && size.height > 604)
-            ? Column(
+        child:  Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    margin: EdgeInsets.all(16),
+                    margin: EdgeInsets.all(5),
                     constraints: const BoxConstraints(
-                      minWidth: 1184,
-                      maxWidth: 1480,
-                      minHeight: 456,
-                      maxHeight: 604,
+                      maxWidth: 800,
+                      maxHeight: 400,
                     ),
                     // alignment: Alignment.center,
                     child: AspectRatio(
-                      aspectRatio: 2.59,
+                      aspectRatio: 2,
                       child: LayoutBuilder(
-                        builder: (context, constraints) => CustomPaint(
-                          painter: PathPainter(),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TimeAndTemp(constraints: constraints),
-                              Expanded(
-                                child: Stack(
-                                  fit: StackFit.expand,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const SizedBox(height: 20),
-                                        const CarIndicators(),
-                                        const Spacer(),
-                                        const CurrentSpeed(speed: 54),
-                                        const Spacer(),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                              "assets/icons/speed_miter.svg",
-                                              height: 32,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8),
-                                              child: Text(
-                                                "100 km/H",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(
-                                                        color: const Color(
-                                                            0xFF6B4339)),
+                        builder: (context, constraints) => Stack(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TimeAndTemp(constraints: constraints),
+                                Expanded(
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children:  [
+                                              const SizedBox(width: 30),
+                                              const CurrentSpeed(speed: 220),
+                                              const Spacer(),
+
+                                               Stack(
+                                                 children: [
+                                                   const SizedBox(
+                                                    height: 280,
+                                                    width: 500,
+                                                    child: const MapView(
+                                                    ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        GearAndBattery(
-                                            constraints: constraints),
-                                      ],
-                                    ),
-                                    ...List.generate(
-                                      speedLineOpacities.length,
-                                      (index) => Positioned(
-                                        bottom: 20 + (2 * index).toDouble(),
-                                        left: constraints.maxWidth * 0.13 -
-                                            (30 * index),
-                                        height: constraints.maxHeight * 0.8,
-                                        width: constraints.maxWidth * 0.31,
-                                        child: Opacity(
-                                          opacity: speedLineOpacities[index],
-                                          child: CustomPaint(
-                                            painter: SpeedLinePainter(),
+
+                                                   Container(
+                                                     height: 280,
+                                                     width: 500,
+                                                     decoration:  BoxDecoration(
+                                                         gradient: RadialGradient(
+                                                              center: Alignment.center,
+                                                              radius: 0.99,
+                                                              colors: [Colors.transparent,Colors.black.withOpacity(0.4), Colors.black],
+                                                              stops: [0.4,0.8, 0.9],
+                                                           tileMode: TileMode.clamp
+                                                         )
+                                                     ),
+                                                   ),
+                                                 ],
+                                               ),
+                                            ],
                                           ),
-                                        ),
+                                          GearAndBattery(
+                                              constraints: constraints),
+                                        ],
                                       ),
-                                    ),
-                                    ...List.generate(
-                                      speedLineOpacities.length,
-                                      (index) => Positioned(
-                                        bottom: 20 + (2 * index).toDouble(),
-                                        right: constraints.maxWidth * 0.13 -
-                                            (30 * index),
-                                        height: constraints.maxHeight * 0.8,
-                                        width: constraints.maxWidth * 0.31,
-                                        child: Transform.scale(
-                                          scaleX: -1,
+                                      ...List.generate(
+                                        speedLineOpacities.length,
+                                        (index) => Positioned(
+                                          bottom: 20 + (2 * index).toDouble(),
+                                          left:
+                                              (30.0 * index),
+                                          height: constraints.maxHeight ,
+                                          width: constraints.maxWidth * 0.31,
                                           child: Opacity(
                                             opacity: speedLineOpacities[index],
                                             child: CustomPaint(
@@ -120,64 +104,41 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+
+                                    ],
+                                  ),
                                 ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Spacer(),
+                                  Container(
+                                    width: 220,
+                                    height: 310,
+                                     child: const MyMenu(),
+                                  ),
+                                  const Spacer(),
+                                ],
                               ),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ],
-              )
-            : Center(
-                child: Text(
-                    "The screen is too small to display the UI \n It can't be viewed on a phone. Try resizing your browser if you are on the web."),
               ),
       ),
     );
   }
 }
 
-class PathPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      // ..color = Colors.red
-      ..shader = const LinearGradient(
-        begin: Alignment.bottomLeft,
-        end: Alignment.bottomRight,
-        // end: a,
-        colors: [
-          Color(0xFF6B4339),
-          Color(0xFF52342C),
-        ],
-      ).createShader(const Offset(0, 0) & size)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0;
 
-    // paint.shader = LinearGradient(colors: colors)
 
-    Path path = Path();
-    path.moveTo(0, size.height / 2);
-    path.lineTo(size.width * 0.13, size.height * 0.05);
-    path.lineTo(size.width * 0.31, 0);
-    path.lineTo(size.width * 0.39, size.height * 0.11);
-    path.lineTo(size.width * 0.60, size.height * 0.11);
-    path.lineTo(size.width * 0.69, 0);
-    path.lineTo(size.width * 0.87, size.height * 0.05);
-    path.lineTo(size.width, size.height / 2);
-    path.lineTo(size.width * 0.87, size.height);
-    path.lineTo(size.width * 0.13, size.height);
-    path.close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
 
 class RPSCustomPainter extends CustomPainter {
   @override
@@ -300,7 +261,7 @@ class GearPrinter extends CustomPainter {
     canvas.drawPath(path, paint);
 
     Path path2 = Path();
-    path2.moveTo(size.width * 0.52, 0);
+    path2.moveTo(size.width * 0.5, 0);
     path2.lineTo(size.width * 0.58, 0);
     path2.lineTo(size.width * 0.66, size.height * 0.5);
     path2.lineTo(size.width * 0.83, size.height * 0.5);

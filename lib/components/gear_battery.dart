@@ -16,34 +16,17 @@ class GearAndBattery extends StatelessWidget {
     return SizedBox(
       // color: Colors.blueGrey.withOpacity(0.15),
       width: constraints.maxWidth * 0.74,
-      height: constraints.maxHeight * 0.22,
+      height: constraints.maxHeight * 0.17,
       child: LayoutBuilder(
         builder: (context, gearConstraints) => Stack(
           fit: StackFit.expand,
           children: [
             CustomPaint(
-              painter: GearPrinter(),
+              painter: AvgWattPerKmPrinter(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Gears(),
-                  Text.rich(
-                    TextSpan(
-                      text: "Rest. ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withOpacity(0.16),
-                      ),
-                      children: const [
-                        TextSpan(
-                          text: "465km",
-                          style: TextStyle(
-                            color: Color(0xFF77C000),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: SizedBox(
@@ -86,62 +69,6 @@ class GearAndBattery extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              top: gearConstraints.maxHeight * 0.10,
-              left: gearConstraints.maxWidth * 0.16,
-              width: gearConstraints.maxWidth * 0.17,
-              height: gearConstraints.maxHeight * 0.38,
-              child: CustomPaint(
-                painter: AvgWattPerKmPrinter(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: gearConstraints.maxWidth * 0.025),
-                    Text(
-                      "Avg. ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withOpacity(0.16),
-                      ),
-                    ),
-                    Text(
-                      "11.3 w/km",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withOpacity(0.32),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              top: gearConstraints.maxHeight * 0.10,
-              right: gearConstraints.maxWidth * 0.16,
-              width: gearConstraints.maxWidth * 0.17,
-              height: gearConstraints.maxHeight * 0.38,
-              child: CustomPaint(
-                painter: OdoPrinter(),
-                child: Row(
-                  children: [
-                    Text(
-                      "ODO. ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withOpacity(0.16),
-                      ),
-                    ),
-                    Text(
-                      "6666.6km",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withOpacity(0.32),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -169,15 +96,20 @@ class AvgWattPerKmPrinter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = const Color(0xFF6B4339)
+      ..invertColors = true
       ..style = PaintingStyle.fill;
 
     // paint.shader = LinearGradient(colors: colors)
     const double strokeWidth = 4;
     Path path = Path()
       ..moveTo(0, size.height)
-      ..lineTo(size.width * 0.27, 0)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width * 0.27, strokeWidth);
+      ..lineTo(size.width * 0.17, size.height*0.5)
+      ..lineTo(size.width,  size.height*0.5)
+      ..lineTo(size.width * 0.17, size.height*0.5 - strokeWidth);
+
+
+
+    canvas.drawPath(path, paint);
 
     path.close();
     canvas.drawPath(path, paint);

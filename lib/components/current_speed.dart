@@ -26,7 +26,7 @@ class CurrentSpeed extends StatelessWidget {
           child: Text(
             "$speed",
             style: const TextStyle(
-              fontSize: 96,
+              fontSize: 100,
               fontWeight: FontWeight.w500,
               height: 0.9,
             ),
@@ -34,8 +34,9 @@ class CurrentSpeed extends StatelessWidget {
         ),
         const Text(
           "km/h",
-          style: TextStyle(fontSize: 20, color: Colors.white30),
-        )
+          style: TextStyle(fontSize: 25, color: Colors.white30),
+        ),
+        SizedBox(height: 100),
       ],
     );
   }
